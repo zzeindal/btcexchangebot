@@ -1,0 +1,56 @@
+const { BaseScene } = require('telegraf');
+const { Keyboard } = require('telegram-keyboard');
+const { $ad, $admin } = require('../connection/mongoose');
+const { bot } = require('../connection/telegram');
+const { back_keyboard, yes_no_keyboard } = require('../helpers/keyboards');
+const { admin_chat } = require('../helpers/utils');
+
+const admin_add_balance_sell_scene = new BaseScene('admin_add_balance_sell_scene');
+admin_add_balance_sell_scene.enter(async(ctx) => {
+    ctx.session.admin = await $ad.findOne({ uid: 0 })
+    await ctx.editMessageText(ctx.i18n.t("admin_add_balance_sell_scene"), {
+        parse_mode: "HTML",
+        reply_markup: back_keyboard("admin_add_balance").reply_markup
+    });
+});
+
+admin_add_balance_sell_scene.on('text', async(ctx) => {
+    if(!Number(ctx.message.text)) return ctx.replyWithHTML(ctx.i18n.t("not_integer"), back_keyboard("admin_add_balance"));
+    if (Number(ctx.message.text) > ctx.session.admin.sell_balance) return ctx.replyWithHTML(ctx.i18n.t("admin_add_balance_sell_scene_error", {
+        balance: ctx.session.admin.sell_balance
+    }), back_keyboard("admin_add_balance"));
+    ctx.session.amount = Number(ctx.message.text);
+
+    ctx.replyWithHTML(ctx.i18n.t("admin_add_balance_sell_scene_request", {
+        amount: ctx.session.amount
+    }), yes_no_keyboard());
+});
+
+admin_add_balance_sell_scene.action('no', async(ctx) => {
+    return ctx.scene.enter("admin_add_balance_sell_scene");
+});
+
+admin_add_balance_sell_scene.action('yes', async(ctx) => {
+    const admin = await $admin.findOne({ uid: 0 });
+    const ad = await $ad.findOne({ uid: ctx.session.ad.uid });
+
+    await admin.inc("balance", Number(ctx.session.amount));
+    await admin.dec("sell_balance", Number(ctx.session.amount));
+
+    await bot.telegram.sendMessage(admin_chat, ctx.i18n.t("admin_add_balance_sell_scene_done", {
+        amount: ctx.session.amount
+    }));
+    
+    await ctx.editMessageText(ctx.i18n.t("admin_add_balance_sell_scene_done", {
+        amount: ctx.session.amount
+    }), {
+        parse_mode: "HTML",
+        reply_markup: back_keyboard("admin_add_balance").reply_markup
+    });
+
+    return ctx.scene.leave();
+});
+
+module.exports = {
+    admin_add_balance_sell_scene
+}

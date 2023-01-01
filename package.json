@@ -1,0 +1,42 @@
+{
+  "name": "seller-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zzeindal",
+  "license": "ISC",
+  "dependencies": {
+    "@nowpaymentsio/nowpayments-api-js": "^1.0.5",
+    "bitcoin-conversion": "^0.4.0",
+    "bitcoin-transaction": "^1.2.1",
+    "bitcore-insight": "^1.0.1",
+    "bitcore-lib": "^8.25.40",
+    "body-parser": "^1.20.1",
+    "bull": "^4.10.2",
+    "crypto-convert": "^2.1.4",
+    "dotenv": "^16.0.1",
+    "ecpair": "^2.1.0",
+    "exceljs": "^4.3.0",
+    "express": "^4.18.2",
+    "from-exponential": "^1.1.1",
+    "generate-password": "^1.7.0",
+    "input": "^1.0.1",
+    "moment": "^2.29.4",
+    "mongoose": "^6.7.2",
+    "node-cron": "^3.0.2",
+    "send-crypto": "^0.2.38",
+    "send-request": "^1.0.5",
+    "telegraf": "3.38",
+    "telegraf-i18n": "^6.6.0",
+    "telegraf-pagination": "^1.4.1",
+    "telegraf-ratelimit": "^2.0.0",
+    "telegraf-sender": "^2.3.6",
+    "telegraf-session-local": "^2.1.0",
+    "telegram": "^2.14.7",
+    "telegram-keyboard": "^2.3.2",
+    "tiny-secp256k1": "^2.2.1"
+  }
+}
